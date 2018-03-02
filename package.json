@@ -1,0 +1,19 @@
+{
+  "name": "literalz",
+  "version": "2.0.0",
+  "description": "Extract embedded literals",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joneit/literalz.git"
+  },
+  "author": "Jonathan Eiten",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joneit/literalz/issues"
+  },
+  "homepage": "https://github.com/joneit/literalz#readme"
+}

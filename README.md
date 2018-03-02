@@ -1,29 +1,51 @@
 # literalz
-Extract literal contents from embedded literals
+Extract embedded literals
 
 Embedded literals:
-* May be a mix of single- or double-quoted
+* May be a mix of single- and double-quoted
 * May contain backslash-escaped delimiter
 
+## Usage
 ```js
-var literalz = require('literalz');
-
-var stringWithEmbeddedLiterals = "\"Bob's & Carol's\" & 'Ted\\'s & Alice\\'s'";
-var sameString = '"Bob\'s & Carol\'s" & \'Ted\\\'s & Alice\\\'s\'';
-console.log(stringWithEmbeddedLiterals === sameString); // true
-
-var stringWithEmptyLiterals = literalz.extract(stringWithEmbeddedLiterals); // "\"\" & ''"
-stringWithEmptyLiterals = stringWithEmptyLiterals.replace('&', 'and');
-console.log(literalz.restore(stringWithEmptyLiterals)); // "\"Bob's & Carol's\" and 'Ted\'s & Alice\'s'"
+var Literalz = require('literalz');
+var x = new Literalz('He said, "She said." You said, \'\\\'nuf said.\'');
+console.log(x.original); // He said, "She said." You said, '\'nuf said.'
+console.log(x.replace(/said/g, 'cried').inject()); // He cried, "She said." You cried, '\'nuf said.'
+```
+After the above, `console.log(x)` produces this:
+```text
+Literalz
+  extract: "He cried, "" You cried, ''"
+  extractions: ["She said.", "\'nuf said."]
+  original: "He said, "She said." You said, '\'nuf said.'"
+  __proto__:
+    inject: ƒ ()
+    replace: ƒ (a, b)
+    constructor: ƒ Literalz(s)
 ```
 
-### API
+## API
 
-#### `literalz.extract(string)`
-Extracts the literals to a private variable and returns a string with ASCII `NUL` (`'\0'`) chars as placeholders.
+### Constructor
 
-#### `literalz.restore(string)`
-Returns a string with the `NUL`s replaced with the (most recently) extracted list of literals.
+#### `new Literalz(string)`
+Sets `this.original` and `this.extract` (see).
 
-#### `literalz.litz`
-Push-down list containing the stowed lists of literals. Pushed by `extract()`, popped by `restore`.
+### Methods
+
+#### `literalz.inject(string)` (method)
+Returns a string with the extractions injected into the empty literals.
+
+#### `literalz.replace(RegExp|string, string)`
+Runs `String.prototype.replace` on `this.extract`. Returns `literalz` for chaining.
+
+### Properties
+
+#### `literalz.original` (string)
+The original string provided to the constructor.
+
+#### `literalz.extract` (string)
+The original string with literal contents removed (quotes remain)
+
+#### `literalz.extractions` (string array)
+The extracted contents of all the literals.
